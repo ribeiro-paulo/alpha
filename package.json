@@ -1,5 +1,6 @@
 {
   "name": "alpha",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,7 +8,9 @@
     "build": "rm -rf build && next build && mv ./out ./build",
     "start": "next start",
     "lint": "next lint",
-    "deploy:prod": "npm run build && npx vercel ./build --yes --token=$VERCEL_TOKEN --prod"
+    "deploy:prod": "npm run deploy:staging --prod",
+    "deploy:staging": "npm run build && npx vercel ./build --yes --token=$VERCEL_TOKEN",
+    "deploy:preview": "node ./scripts/pullRequestPreview.js"
   },
   "dependencies": {
     "next": "15.3.2",
