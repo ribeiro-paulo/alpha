@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "rm -rf build && next build && mv ./out ./build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy:prod": "npm run deploy --prod --token=$VERCEL_TOKEN",
+    "deploy": "npm run build && npx vercel ./build --confirm --no-clipboard"
   },
   "dependencies": {
     "next": "15.3.2",
