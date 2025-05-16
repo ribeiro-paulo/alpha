@@ -1,9 +1,9 @@
-import { execSync } from "child_process";
-// import fetch from "node-fetch";
+// import { execSync } from "child_process";
+import fetch from "node-fetch";
 
 console.log("[DEPLOY_PREVIEW]: START");
-const command = "npm run deploy:staging";
-const output = execSync(command, { encoding: "utf8" });
+// const command = "npm run deploy:staging";
+// const output = execSync(command, { encoding: "utf8" });
 const outputLines = output.split("\n");
 const DEPLOY_URL = outputLines[outputLines.length - 1];
 console.log("[DEPLOY_PREVIEW]: END");
@@ -24,26 +24,25 @@ defaultHeaders["authorization"] = `token ${GITHUB_TOKEN}`;
 defaultHeaders["accept"] =
   "application/vnd.github.v3+json; application/vnd.github.antiope-preview+json";
 defaultHeaders["content-type"] = "application/json";
-
+const URL = `https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_PR_NUMBER}/comments`;
 console.log("GITHUB_REPOSITORY", GITHUB_REPOSITORY);
 console.log("GITHUB_PR_NUMBER", GITHUB_PR_NUMBER);
+console.log("defaultHeaders", defaultHeaders);
+console.log("URI", URL);
 
-fetch(
-  `https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${GITHUB_PR_NUMBER}/comments`,
-  {
-    headers: defaultHeaders,
-    method: "POST",
-    body: JSON.stringify({
-      body: GH_COMMENT,
-    }),
-  },
-)
+fetch(URL, {
+  headers: defaultHeaders,
+  method: "POST",
+  body: JSON.stringify({
+    body: GH_COMMENT,
+  }),
+})
   .then((response) => {
     if (response.ok) return response.json();
     throw new Error(response.statusText);
   })
   .catch((err) => {
-    console.log("[COMMENT_ON_GITHUB: ERROR]");
+    console.log("[COMMENT_ON_GITHUB: ERROR]", err);
     throw new Error(err);
   })
   .finally(() => {
